@@ -1,0 +1,10 @@
+name: DiscordNotif
+version: 2.0
+main: uwu.smsgamer.discordnotif.DiscordNotif
+api-version: 1.13
+authors: [Sms_Gamer_3808]
+description: Sends messages in Discord.
+soft-depend: [PlaceholderAPI]
+commands:
+  discordnotif:
+    usage: /DiscordNotif (type) (message)

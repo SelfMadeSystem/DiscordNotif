@@ -1,0 +1,51 @@
+apply plugin: 'java'
+
+group = pluginGroup
+version = pluginVersion
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+}
+
+configurations {
+    // configuration that holds jars to include in the jar
+    compileLibs
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compileOnly 'me.clip:placeholderapi:2.10.9'
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compile 'org.apache.httpcomponents:httpclient:4.5.13'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compileLibs 'org.apache.httpcomponents:httpclient:4.5.13'
+    compileLibs 'com.googlecode.json-simple:json-simple:1.1.1'
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+jar {
+    from {
+        configurations.compileLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

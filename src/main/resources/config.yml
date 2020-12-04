@@ -1,0 +1,14 @@
+Hack:
+  aliases:
+    - hack
+    - hacking
+    - cheat
+    - cheating
+  url: https://discordapp.com/api/webhooks/...
+  min-args: 1
+  usage-message: '&cUsage: /discordnotif Hack <player> <reason> [extra information]'
+  success-message: '&eThank you for &creporting&e &a%1%&e!'
+  discord-message: |
+    %player_name% is reporting: %1% for %2%.
+    ```%1-4%```
+    ```%4+%```
