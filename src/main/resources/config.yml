@@ -1,3 +1,9 @@
+messages:
+  notif-type-not-found: "&cThat notification type has not been found."
+  error-message: "&cUh oh! An error has occurred. Check console for more information."
+  basic-usage: "&cUsage: /discordnotif <type> [extra information]"
+  no-permission: "&cYou do not have permission to execute this command."
+  no-permission-notif: "&cError: You have no permission to use this notif."
 Hack:
   aliases:
     - hack
