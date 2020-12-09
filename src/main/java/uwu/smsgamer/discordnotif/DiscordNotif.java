@@ -5,6 +5,7 @@ import org.bukkit.command.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import uwu.smsgamer.senapi.SenAPI;
 
 import java.io.File;
 import java.util.List;
@@ -12,8 +13,8 @@ import java.util.List;
 // Yes shit code idc
 public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
 
+    public static SenAPI api;
     public static FileConfiguration config;
-    public static boolean papiEnabled;
     public static String noPermission;
     public static String noPermissionNotif;
     public static String basicUsage;
@@ -22,7 +23,7 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onEnable() {
-        papiEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        StringHelper.setup(api = Bukkit.getServicesManager().load(SenAPI.class));
         getCommand("discordnotif").setExecutor(this);
         loadConfig();
         noPermission = config.getString("messages.no-permission");
@@ -30,10 +31,11 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
         basicUsage = config.getString("messages.basic-usage");
         errorMessage = config.getString("messages.error-message");
         notifTypeNotFound = config.getString("messages.notif-type-not-found");
+
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        OfflinePlayer player = sender instanceof OfflinePlayer ? (OfflinePlayer) sender : ConsolePlayer.getInstance();
+        OfflinePlayer player = api.getPlayerUtils().getPlayer(sender);
         try {
             if (!sender.hasPermission("discordnotif.command")) {
                 sender.sendMessage(StringHelper.stringify(player, noPermission, args));

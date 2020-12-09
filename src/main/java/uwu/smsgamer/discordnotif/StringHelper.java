@@ -1,18 +1,25 @@
 package uwu.smsgamer.discordnotif;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
+import uwu.smsgamer.senapi.SenAPI;
+import uwu.smsgamer.senapi.utils.StringUtils;
 
 public class StringHelper {
+    private static StringUtils utils;
+
+    public static void setup(SenAPI api) {
+        utils = api.getStringUtils();
+    }
+
     public static String stringifyNoC(final OfflinePlayer player, final String string, final String[] args) {
-        return replaceArgs(papi(player, string), args);
+        return utils.replaceArgsPlaceholders(utils.replacePlaceholders(player, string), args);
     }
 
     public static String stringify(final OfflinePlayer player, final String string, final String[] args) {
-        return replaceArgs(colorize(papi(player, string)), args);
+        return utils.replaceArgsPlaceholders(utils.colorize(utils.replacePlaceholders(player, string)), args);
     }
 
-    public static String papi(final OfflinePlayer player, final String string) {
+    /*public static String papi(final OfflinePlayer player, final String string) {
         if (DiscordNotif.papiEnabled) return PlaceholderAPI.setPlaceholders(player, string);
         else return string.replace("%player_name%", player.getName());
     }
@@ -55,5 +62,5 @@ public class StringHelper {
             at++;
         }
         return sb.toString();
-    }
+    }*/
 }
