@@ -1,22 +1,15 @@
 package uwu.smsgamer.discordnotif;
 
 import org.bukkit.*;
-import uwu.smsgamer.senapi.SenAPI;
 import uwu.smsgamer.senapi.utils.StringUtils;
 
 public class StringHelper {
-    private static StringUtils utils;
-
-    public static void setup(SenAPI api) {
-        utils = api.getStringUtils();
-    }
-
     public static String stringifyNoC(final OfflinePlayer player, final String string, final String[] args) {
-        return utils.replaceArgsPlaceholders(utils.replacePlaceholders(player, string), args);
+        return StringUtils.replaceArgsPlaceholders(StringUtils.replacePlaceholders(player, string), args);
     }
 
     public static String stringify(final OfflinePlayer player, final String string, final String[] args) {
-        return utils.replaceArgsPlaceholders(utils.colorize(utils.replacePlaceholders(player, string)), args);
+        return StringUtils.replaceArgsPlaceholders(StringUtils.colorize(StringUtils.replacePlaceholders(player, string)), args);
     }
 
     /*public static String papi(final OfflinePlayer player, final String string) {

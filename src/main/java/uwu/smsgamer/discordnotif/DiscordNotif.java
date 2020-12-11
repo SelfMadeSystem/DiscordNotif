@@ -1,11 +1,12 @@
 package uwu.smsgamer.discordnotif;
 
-import org.bukkit.*;
+import me.godead.lilliputian.*;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import uwu.smsgamer.senapi.SenAPI;
+import uwu.smsgamer.senapi.utils.PlayerUtils;
 
 import java.io.File;
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.List;
 // Yes shit code idc
 public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
 
-    public static SenAPI api;
     public static FileConfiguration config;
     public static String noPermission;
     public static String noPermissionNotif;
@@ -23,7 +23,24 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onEnable() {
-        StringHelper.setup(api = Bukkit.getServicesManager().load(SenAPI.class));
+        final Lilliputian lil = new Lilliputian(this);
+        lil.getDependencyBuilder().addDependency(new Dependency(
+          Repository.JITPACK,
+          "com.github.True-cc",
+          "SenAPI",
+          "0.2"
+        )).addDependency(new Dependency(
+          Repository.MAVENCENTRAL,
+          "org.apache.httpcomponents",
+          "httpclient",
+          "4.5.13"
+        )).addDependency(new Dependency(
+          Repository.MAVENCENTRAL,
+          "com.googlecode.json-simple",
+          "json-simple",
+          "1.1.1"
+        )).loadDependencies();
+
         getCommand("discordnotif").setExecutor(this);
         loadConfig();
         noPermission = config.getString("messages.no-permission");
@@ -35,7 +52,7 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        OfflinePlayer player = api.getPlayerUtils().getPlayer(sender);
+        OfflinePlayer player = PlayerUtils.getPlayer(sender);
         try {
             if (!sender.hasPermission("discordnotif.command")) {
                 sender.sendMessage(StringHelper.stringify(player, noPermission, args));
@@ -53,7 +70,8 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
             String sectionName = section.getName();
             if (sender.hasPermission("discordnotif.notif." + sectionName)) {
                 if (args.length - 1 >= section.getInt("min-args")) {
-                    new DiscordWebHook(section.getString("url"),
+                    new DiscordWebHook(
+                      section.getString("url"),
                       StringHelper.stringifyNoC(player, section.getString("discord-message"), args)).run();
                     sender.sendMessage(StringHelper.stringify(player, section.getString("success-message"), args));
                 } else {
