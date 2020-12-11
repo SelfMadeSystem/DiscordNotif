@@ -34,6 +34,8 @@ public class DiscordWebHook implements Runnable {
                 byte[] input = param.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
+
+            con.getResponseMessage();
         } catch (IOException e) {
             e.printStackTrace();
         }
