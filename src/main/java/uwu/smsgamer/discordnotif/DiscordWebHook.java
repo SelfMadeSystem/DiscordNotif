@@ -1,12 +1,9 @@
 package uwu.smsgamer.discordnotif;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.simple.JSONObject;
-
-import java.io.IOException;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 public class DiscordWebHook implements Runnable {
     private final String webHookUrl;
@@ -19,14 +16,24 @@ public class DiscordWebHook implements Runnable {
 
     @Override
     public void run() {
-        HttpClient httpClient = HttpClientBuilder.create().build();
         try {
-            HttpPost thePost = new HttpPost(webHookUrl);
-            StringEntity params = new StringEntity("{\"content\": \"" + JSONObject.escape(message) + "\"}");
-            thePost.addHeader("content-type", "application/json");
-            thePost.addHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11");
-            thePost.setEntity(params);
-            httpClient.execute(thePost);
+            URL url = new URL(webHookUrl);
+
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            con.setRequestMethod("POST");
+
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11");
+            con.setDoOutput(true);
+
+            String param = "{\"content\": \"" + StringHelper.escape(message) + "\"}";
+
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = param.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

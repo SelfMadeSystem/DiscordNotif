@@ -1,12 +1,10 @@
 package uwu.smsgamer.discordnotif;
 
-import me.godead.lilliputian.*;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import uwu.smsgamer.senapi.utils.PlayerUtils;
 
 import java.io.File;
 import java.util.List;
@@ -20,26 +18,11 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
     public static String basicUsage;
     public static String errorMessage;
     public static String notifTypeNotFound;
+    public static boolean papiEnabled;
 
     @Override
     public void onEnable() {
-        final Lilliputian lil = new Lilliputian(this);
-        lil.getDependencyBuilder().addDependency(new Dependency(
-          Repository.JITPACK,
-          "com.github.True-cc",
-          "SenAPI",
-          "0.2"
-        )).addDependency(new Dependency(
-          Repository.MAVENCENTRAL,
-          "org.apache.httpcomponents",
-          "httpclient",
-          "4.5.13"
-        )).addDependency(new Dependency(
-          Repository.MAVENCENTRAL,
-          "com.googlecode.json-simple",
-          "json-simple",
-          "1.1.1"
-        )).loadDependencies();
+        papiEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
         getCommand("discordnotif").setExecutor(this);
         loadConfig();
@@ -52,7 +35,7 @@ public final class DiscordNotif extends JavaPlugin implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        OfflinePlayer player = PlayerUtils.getPlayer(sender);
+        OfflinePlayer player = sender instanceof OfflinePlayer ? (OfflinePlayer) sender : ConsolePlayer.getInstance();
         try {
             if (!sender.hasPermission("discordnotif.command")) {
                 sender.sendMessage(StringHelper.stringify(player, noPermission, args));
