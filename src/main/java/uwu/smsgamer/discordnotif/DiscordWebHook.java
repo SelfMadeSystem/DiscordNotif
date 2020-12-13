@@ -35,7 +35,7 @@ public class DiscordWebHook implements Runnable {
                 os.write(input, 0, input.length);
             }
 
-            con.getResponseMessage();
+            con.getResponseCode();
         } catch (IOException e) {
             e.printStackTrace();
         }
